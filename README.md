@@ -17,12 +17,12 @@ Proyecto de predicción de precios de acciones de IBM (1980–2025) con **Machin
 Pa-Cr-ProyectoFinal_simplified/
 ├─ notebooks/
 │  ├─ 1_EDA.ipynb
-│  └─ 2_Modeling.ipynb
+│  └─ 2_Modelamiento.ipynb
 ├─ app/
 │  └─ app.py
 ├─ data/
 │  └─ IBM_Stock_1980_2025.csv   
-├─ models/
+├─ Models/
 │  └─ (se guardarán los modelos .joblib aquí)
 ├─ requirements.txt
 └─ README.md
