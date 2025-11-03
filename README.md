@@ -27,6 +27,11 @@ Pa-Cr-ProyectoFinal_simplified/
 ├─ requirements.txt
 └─ README.md
 ```
+## Clonar repositorio
+
+```bash
+   git clone https://github.com/Petr0510/Pa-Cr-ProyectoFinal.git
+```
 
 ## Ejecución
 1. Crear y activar entorno virtual:
@@ -47,9 +52,13 @@ Windows
 ```bash
    pip install -r requirements.txt
 ```
-3. Entrenamiento:
+3. Ejecutar Notebooks:
 ```bash
-   python -m src.model_training
+   - EDA.ipynb --> Analisis exporatorio del dataset "IBM_Stock_1980_2025"
+   - Modelamiento.ipynb --> Al terminar, los pipelines guardados estarán en models/:
+
+      * models/LinearRegression.joblib
+      * models/RandomForest.joblib
 ```
 4. Ejecucion aplicación:
 

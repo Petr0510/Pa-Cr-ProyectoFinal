@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import joblib
 from pathlib import Path
+from datetime import datetime
 
 # Configuración inicial
 st.set_page_config(page_title="Predicción de Precio IBM", layout="wide")
@@ -54,9 +55,9 @@ with tab1:
 with tab2:
     st.header("Modelos Entrenados Disponibles")
 
-    models_dir = Path("models")
+    models_dir = Path("Models")
     if not models_dir.exists():
-        st.warning("⚠️ Aún no existe la carpeta 'models'. Ejecuta el notebook 2_Modeling.ipynb para crear los modelos.")
+        st.warning("⚠️ Aún no existe la carpeta 'Models'. Ejecuta el notebook Modelamiento.ipynb para crear los modelos.")
     else:
         models = [f.name for f in models_dir.glob("*.joblib")]
         if models:
@@ -91,15 +92,79 @@ with tab3:
         day = st.number_input("Día", min_value=1, max_value=31, step=1)
 
     model_choice = st.selectbox("Seleccionar Modelo", ["LinearRegression", "RandomForest"], index=1)
-    model_path = Path(f"models/{model_choice}.joblib")
+    model_path = Path(f"Models/{model_choice}.joblib")
 
     if st.button("Predecir Precio"):
         if not model_path.exists():
             st.error(f"⚠️ No se encontró el modelo {model_choice}. Entrénalo primero en el notebook 2_Modeling.ipynb.")
         else:
             model = joblib.load(model_path)
-            features = pd.DataFrame([[open_val, high_val, low_val, vol_val, year, month, day]],
-                                    columns=['Open', 'High', 'Low', 'Volume', 'year', 'month', 'day'])
+            # Construir fila de entrada compatible con las columnas usadas en entrenamiento
+            # Determinar columnas esperadas por el preprocessor (ColumnTransformer)
+            try:
+                preprocessor = model.named_steps['preprocessor']
+                required_cols = []
+                for name, trans, cols in preprocessor.transformers_:
+                    # cols puede ser lista de nombres o índices; cuando es 'remainder' lo ignoramos
+                    if cols == 'remainder':
+                        continue
+                    # Si cols es slice/np array de índices, no podemos mapear nombres aquí; asumimos que
+                    # el ColumnTransformer fue ajustado con nombres de columnas (caso común en DataFrame)
+                    try:
+                        required_cols.extend(list(cols))
+                    except Exception:
+                        pass
+            except Exception:
+                required_cols = []
+
+            # Calcular dayofweek a partir de la fecha ingresada
+            try:
+                dayofweek = datetime(int(year), int(month), int(day)).weekday()
+            except Exception:
+                dayofweek = 0
+
+            # Construir diccionario con valores por defecto para columnas faltantes
+            input_dict = {}
+            # valores provistos por el usuario
+            input_values = {
+                'Open': open_val,
+                'High': high_val,
+                'Low': low_val,
+                'Volume': vol_val,
+                'year': int(year),
+                'month': int(month),
+                'dayofweek': int(dayofweek),
+                # mantener compatibilidad si se usó 'day' en alguna parte
+                'day': int(day)
+            }
+
+            if required_cols:
+                for col in required_cols:
+                    if col in input_values:
+                        input_dict[col] = input_values[col]
+                    else:
+                        # rellenar columnas no provistas con 0 o una constante razonable
+                        input_dict[col] = 0
+            else:
+                # Fallback: usar un conjunto mínimo de columnas
+                input_dict = {
+                    'Open': open_val,
+                    'High': high_val,
+                    'Low': low_val,
+                    'Volume': vol_val,
+                    'year': int(year),
+                    'month': int(month),
+                    'dayofweek': int(dayofweek)
+                }
+
+            features = pd.DataFrame([input_dict])
+            # Asegurar que las columnas estén en el mismo orden que el preprocessor esperaba
+            try:
+                if required_cols:
+                    features = features.reindex(columns=required_cols)
+            except Exception:
+                pass
+
             pred = model.predict(features)[0]
             st.success(f"💰 Precio estimado (Close): **${pred:.2f} USD**")
 
