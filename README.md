@@ -55,17 +55,17 @@ Windows
 3. Ejecutar Notebooks:
 ```bash
    - EDA.ipynb --> Analisis exporatorio del dataset "IBM_Stock_1980_2025"
-   - Modelamiento.ipynb --> Al terminar, los pipelines guardados estarán en models/:
+   - Modelamiento.ipynb --> Al terminar, los pipelines guardados estarán en Models/:
 
-      * models/LinearRegression.joblib
-      * models/RandomForest.joblib
+      * Models/LinearRegression.joblib
+      * Models/RandomForest.joblib
 ```
 4. Ejecucion aplicación:
 
 ```bash
-   streamlit run app/streamlit_app.py
+   streamlit run app/app.py
 ```
 
-Autor
+Autores
 
 Cristian Ávila y Pablo Troncoso — Proyecto final con buenas prácticas de ingeniería de datos.
