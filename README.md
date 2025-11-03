@@ -1,6 +1,3 @@
-# Pa-Cr-ProyectoFinal
-Proyecto predictorio IBM (1980-2025)
-
 # IBM Stock ML App
 
 Proyecto de predicción de precios de acciones de IBM (1980–2025) con **Machine Learning y Streamlit**.
@@ -14,7 +11,7 @@ Proyecto de predicción de precios de acciones de IBM (1980–2025) con **Machin
 ## Estructura
 
 ```
-Pa-Cr-ProyectoFinal_simplified/
+Pa-Cr-ProyectoFinal/
 ├─ notebooks/
 │  ├─ 1_EDA.ipynb
 │  └─ 2_Modelamiento.ipynb
