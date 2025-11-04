@@ -62,6 +62,20 @@ Windows
 ```bash
    streamlit run app/app.py
 ```
+## Ejemplo práctico predicción
+```
+* Llenar los campos con los valores:
+
+   Precio de Apertura (Open): 180.5
+   Precio Máximo (High): 182.3
+   Precio Mínimo (Low): 179.2
+   Volumen (Volume): 4500000
+   Año: 2024
+   Mes: 11
+   Día: 1
+   Seleccionar Modelo: RandomForest
+
+```
 
 Autores
 
